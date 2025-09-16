@@ -10,12 +10,27 @@ export const getClients = async () => {
   return data || [];
 };
 
-export const getFollowUpClients = async () => {
-  const { data } = await http.get("/clients-follow-up");
+export const getClientsToFollowUp = async () => {
+  const { data } = await http.get("/clients-to-do-follow-up");
   return data || [];
 };
 
-export const getClientMessages = async (clientId) => {
-  const { data } = await http.get(`/clients/${clientId}/messages`);
+export const getClientbyId = async (clientId) => {
+  const { data } = await http.get(`/clients/${clientId}`);
+  return data || [];
+};
+
+export const getClientsNotToFollowUp = async () => {
+  const [allClients, followUpClients] = await Promise.all([
+    getClients(),
+    getClientsToFollowUp(),
+  ]);
+
+  const followUpIds = new Set(followUpClients.map((c) => c.id));
+  return allClients.filter((c) => !followUpIds.has(c.id));
+};
+
+export const generateAgentMessage = async (clientId) => {
+  const { data } = await http.get(`/clients/${clientId}/generateMessage`);
   return data || [];
 };
