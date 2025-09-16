@@ -32,6 +32,9 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
     <div className="chat">
       <header className="chat__header">
         <h2 className="chat__title">{client.name}</h2>
+        <p className="client-info">RUT: {client.rut} - Deudas: { }
+            {client.Debts && client.Debts.length > 0 ? client.Debts.reduce((total, d) => total + (d.amount ?? 0), 0) 
+            : " No tiene"}</p>
       </header>
 
       <div className="chat__messages" ref={listRef}>

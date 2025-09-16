@@ -74,6 +74,9 @@
   opacity: 0.7;
 }
 
+.client-info {
+  font-size: 0.7rem;
+}
 
 .bubble-row { display: flex; }
 .bubble-row.left  { justify-content: flex-start; }
