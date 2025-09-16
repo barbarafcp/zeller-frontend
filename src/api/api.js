@@ -29,3 +29,8 @@ export const getClientsNotToFollowUp = async () => {
   const followUpIds = new Set(followUpClients.map((c) => c.id));
   return allClients.filter((c) => !followUpIds.has(c.id));
 };
+
+export const generateAgentMessage = async (clientId) => {
+  const { data } = await http.get(`/clients/${clientId}/generateMessage`);
+  return data || [];
+};

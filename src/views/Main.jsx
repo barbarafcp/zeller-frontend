@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getClients, getClientsToFollowUp, getClientsNotToFollowUp, getClientbyId } from "../api/api";
+import { getClients, getClientsToFollowUp, getClientsNotToFollowUp, getClientbyId, generateAgentMessage } from "../api/api";
 
 import Sidebar from "../components/Sidebar";
 import ClientList from "../components/ClientList";
@@ -15,6 +15,7 @@ export default function Main() {
   const [messages, setMessages] = useState(null);
   const [loadingClients, setLoadingClients] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
 
   // Guard against race conditions when switching clients quickly
@@ -81,6 +82,21 @@ export default function Main() {
     [messages]
   );
 
+  const handleGenerateMessage = async () => {
+    if (!selectedClient) return;
+    try {
+      setGenerating(true);
+      setError(null);
+      const newMsg = await generateAgentMessage(selectedClient.id);
+      console.log("new msg", newMsg);
+      setMessages((prev) => Array.isArray(prev) ? [...prev, newMsg] : [newMsg]);
+    } catch (err) {
+      setError(err?.response?.data?.message || err.message);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="app-grid">
       <Sidebar title="Zellercito" mode={mode} onModeChange={setMode} />
@@ -108,7 +124,8 @@ export default function Main() {
         )}
 
         {selectedClient && showChat && messages && (
-          <ChatView client={selectedClient} messages={messages} />
+          <ChatView client={selectedClient} messages={messages} 
+          onGenerate={handleGenerateMessage} generating={generating}/>
         )}
       </main>
     </div>
