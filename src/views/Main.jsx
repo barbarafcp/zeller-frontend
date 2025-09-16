@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { getClients, getFollowUpClients, getClientMessages } from "../api/api";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { getClients, getClientsToFollowUp, getClientsNotToFollowUp, getClientbyId } from "../api/api";
 
 import Sidebar from "../components/Sidebar";
 import ClientList from "../components/ClientList";
@@ -9,13 +9,16 @@ import EmptyState from "../components/EmptyState";
 import "../styles/main-layout.css";
 
 export default function Main() {
-  const [mode, setMode] = useState("followup"); // "followup" | "all"
+  const [mode, setMode] = useState("all"); // modes: "all" | "followup" | "noFollowup"
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [messages, setMessages] = useState(null);
   const [loadingClients, setLoadingClients] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [error, setError] = useState(null);
+
+  // Guard against race conditions when switching clients quickly
+  const fetchIdRef = useRef(0);
 
   useEffect(() => {
     let alive = true;
@@ -26,10 +29,14 @@ export default function Main() {
         setSelectedClient(null);
         setMessages(null);
 
-        const list =
-          mode === "followup"
-            ? await getFollowUpClients()
-            : await getClients();
+        let list = [];
+        if (mode === "followup") {
+          list = await getClientsToFollowUp();
+        } else if (mode === "noFollowup") {
+          list = await getClientsNotToFollowUp();
+        } else {
+          list = await getClients();
+        }
 
         if (alive) setClients(list);
       } catch (err) {
@@ -44,28 +51,29 @@ export default function Main() {
     };
   }, [mode]);
 
-  // Handle client selection → load messages
+  // Handle client selection → load full client (which includes messages)
   const handleSelectClient = (client) => {
-    setSelectedClient(client);
     setLoadingMessages(true);
     setError(null);
     setMessages(null);
 
-    let alive = true;
+    const myFetchId = ++fetchIdRef.current;
+
     (async () => {
       try {
-        const msgs = await getClientMessages(client.id);
-        if (alive) setMessages(msgs);
+        const fullClient = await getClientbyId(client.id); // or await getClientMessages(client.id)
+        // Ignore if a newer selection started
+        if (fetchIdRef.current !== myFetchId) return;
+
+        setSelectedClient(fullClient || client); // keep original basic data if null
+        setMessages(fullClient?.Messages ?? []); // because /clients/:id returns messages
       } catch (err) {
-        if (alive) setError(err?.response?.data?.message || err.message);
+        if (fetchIdRef.current !== myFetchId) return;
+        setError(err?.response?.data?.message || err.message);
       } finally {
-        if (alive) setLoadingMessages(false);
+        if (fetchIdRef.current === myFetchId) setLoadingMessages(false);
       }
     })();
-
-    return () => {
-      alive = false;
-    };
   };
 
   const showChat = useMemo(
@@ -88,15 +96,15 @@ export default function Main() {
         {error && <div className="error-banner">{error}</div>}
 
         {!selectedClient && !loadingMessages && (
-          <EmptyState message="Select a client to view messages." />
+          <EmptyState message="Selecciona a un cliente para ver los mensajes." />
         )}
 
         {selectedClient && loadingMessages && (
-          <EmptyState message="Loading messages…" spinner />
+          <EmptyState message="Cargando…" spinner />
         )}
 
         {selectedClient && !loadingMessages && !showChat && (
-          <EmptyState message="No messages for this client yet." />
+          <EmptyState message="No hay mensajes disponibles." />
         )}
 
         {selectedClient && showChat && messages && (

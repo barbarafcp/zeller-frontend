@@ -7,6 +7,13 @@ export default function Sidebar({ title, mode, onModeChange }) {
 
       <nav className="sidebar__nav">
         <button
+          className={`sidebar__btn ${mode === "all" ? "is-active" : ""}`}
+          onClick={() => onModeChange("all")}
+        >
+          All Clients
+        </button>
+
+         <button
           className={`sidebar__btn ${mode === "followup" ? "is-active" : ""}`}
           onClick={() => onModeChange("followup")}
         >
@@ -14,10 +21,10 @@ export default function Sidebar({ title, mode, onModeChange }) {
         </button>
 
         <button
-          className={`sidebar__btn ${mode === "all" ? "is-active" : ""}`}
-          onClick={() => onModeChange("all")}
+          className={`sidebar__btn ${mode === "noFollowup" ? "is-active" : ""}`}
+          onClick={() => onModeChange("noFollowup")}
         >
-          All Clients
+          Clients that don't need follow up
         </button>
       </nav>
     </aside>

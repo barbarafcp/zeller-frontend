@@ -1,5 +1,6 @@
 .chat-area {
   background: var(--surface); /* right column white */
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -25,7 +26,7 @@
 .chat__messages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 12px 20px;
+  padding: 16px 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -37,10 +38,10 @@
 
 .bubble {
   max-width: min(70%, 560px);
-  padding: 10px 12px;
+  padding: 0px 15px;
   border-radius: 14px;
   box-shadow: 0 1px 0 rgba(0,0,0,.04);
-  font-size: .98rem;
+  font-size: .8rem;
   line-height: 1.35;
 }
 
@@ -51,7 +52,7 @@
 }
 
 .bubble--agent {
-  background: var(--purple-med);
+  background: var(--purple-dark);
   color: #fff;
   border-top-right-radius: 6px;
 }
