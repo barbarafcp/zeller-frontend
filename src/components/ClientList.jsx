@@ -3,25 +3,25 @@ import "../styles/client-list.css";
 export default function ClientList({ clients, loading, selectedId, onSelect }) {
   return (
     <section className="client-list">
-      <header className="client-list__header">
+      <header className="client-list-header">
         <h2>Clients</h2>
-        {loading && <span className="client-list__loading">Loading…</span>}
+        {loading && <span className="client-list-loading">Loading…</span>}
       </header>
 
-      <div className="client-list__items">
-        {clients.map((c) => (
+      <div className="client-list-items">
+        {clients.map((client) => (
           <button
-            key={c.id}
-            className={`client-pill ${selectedId === c.id ? "is-selected" : ""}`}
-            onClick={() => onSelect(c)}
-            title={c.name}
+            key={client.id}
+            className={`client-pill ${selectedId === client.id ? "is-selected" : ""}`}
+            onClick={() => onSelect(client)}
+            title={client.name}
           >
-            {c.name}
+            {client.name}
           </button>
         ))}
 
         {!loading && clients.length === 0 && (
-          <div className="client-list__empty">No clients found.</div>
+          <div className="client-list-empty">No clients found.</div>
         )}
       </div>
     </section>

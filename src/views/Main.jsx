@@ -1,101 +1,32 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { getClients, getClientsToFollowUp, getClientsNotToFollowUp, getClientbyId, generateAgentMessage } from "../api/api";
-
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ClientList from "../components/ClientList";
 import ChatView from "../components/ChatView";
 import EmptyState from "../components/EmptyState";
+import useClients from "../hooks/useClients";
+import useGenerateMessage from "../hooks/useGenerateMessage";
 
 import "../styles/main-layout.css";
 
 export default function Main() {
   const [mode, setMode] = useState("all"); // modes: "all" | "followup" | "noFollowup"
-  const [clients, setClients] = useState([]);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [messages, setMessages] = useState(null);
-  const [loadingClients, setLoadingClients] = useState(false);
-  const [loadingMessages, setLoadingMessages] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [error, setError] = useState(null);
 
-  // Guard against race conditions when switching clients quickly
-  const fetchIdRef = useRef(0);
+  const {
+    clients,
+    selectedClient,
+    messages,
+    loadingClients,
+    loadingMessages,
+    error,
+    selectClient,
+    setMessages,
+  } = useClients(mode);
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        setLoadingClients(true);
-        setError(null);
-        setSelectedClient(null);
-        setMessages(null);
+  // Hook para generar mensajes automáticos
+  const { generating, generateMessage } = useGenerateMessage(selectedClient, setMessages);
 
-        let list = [];
-        if (mode === "followup") {
-          list = await getClientsToFollowUp();
-        } else if (mode === "noFollowup") {
-          list = await getClientsNotToFollowUp();
-        } else {
-          list = await getClients();
-        }
-
-        if (alive) setClients(list);
-      } catch (err) {
-        if (alive) setError(err?.response?.data?.message || err.message);
-      } finally {
-        if (alive) setLoadingClients(false);
-      }
-    })();
-
-    return () => {
-      alive = false;
-    };
-  }, [mode]);
-
-  // Handle client selection → load full client (which includes messages)
-  const handleSelectClient = (client) => {
-    setLoadingMessages(true);
-    setError(null);
-    setMessages(null);
-
-    const myFetchId = ++fetchIdRef.current;
-
-    (async () => {
-      try {
-        const fullClient = await getClientbyId(client.id); // or await getClientMessages(client.id)
-        // Ignore if a newer selection started
-        if (fetchIdRef.current !== myFetchId) return;
-
-        setSelectedClient(fullClient || client); // keep original basic data if null
-        setMessages(fullClient?.Messages ?? []); // because /clients/:id returns messages
-      } catch (err) {
-        if (fetchIdRef.current !== myFetchId) return;
-        setError(err?.response?.data?.message || err.message);
-      } finally {
-        if (fetchIdRef.current === myFetchId) setLoadingMessages(false);
-      }
-    })();
-  };
-
-  const showChat = useMemo(
-    () => Array.isArray(messages) && messages.length > 0,
-    [messages]
-  );
-
-  const handleGenerateMessage = async () => {
-    if (!selectedClient) return;
-    try {
-      setGenerating(true);
-      setError(null);
-      const newMsg = await generateAgentMessage(selectedClient.id);
-      console.log("new msg", newMsg);
-      setMessages((prev) => Array.isArray(prev) ? [...prev, newMsg] : [newMsg]);
-    } catch (err) {
-      setError(err?.response?.data?.message || err.message);
-    } finally {
-      setGenerating(false);
-    }
-  };
+  // Indica si hay mensajes para mostrar
+  const showChat = Array.isArray(messages) && messages.length > 0;
 
   return (
     <div className="app-grid">
@@ -105,7 +36,7 @@ export default function Main() {
         clients={clients}
         loading={loadingClients}
         selectedId={selectedClient?.id ?? null}
-        onSelect={handleSelectClient}
+        onSelect={selectClient}
       />
 
       <main className="chat-area">
@@ -123,9 +54,13 @@ export default function Main() {
           <EmptyState message="No hay mensajes disponibles." />
         )}
 
-        {selectedClient && showChat && messages && (
-          <ChatView client={selectedClient} messages={messages} 
-          onGenerate={handleGenerateMessage} generating={generating}/>
+        {selectedClient && showChat && (
+          <ChatView
+            client={selectedClient}
+            messages={messages}
+            onGenerate={generateMessage}
+            generating={generating}
+          />
         )}
       </main>
     </div>
