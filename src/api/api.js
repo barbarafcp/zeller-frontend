@@ -1,7 +1,8 @@
 import axios from "axios";
+import API_URL from '../config'
 
 export const http = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3000",
+  baseURL: API_URL,
   timeout: 10000,
 });
 
