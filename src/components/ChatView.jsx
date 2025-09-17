@@ -30,23 +30,23 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
 
   return (
     <div className="chat">
-      <header className="chat__header">
-        <h2 className="chat__title">{client.name}</h2>
+      <header className="chat-header">
+        <h2 className="chat-title">{client.name}</h2>
         <p className="client-info">RUT: {client.rut} - Deudas: { }
             {client.Debts && client.Debts.length > 0 ? client.Debts.reduce((total, d) => total + (d.amount ?? 0), 0) 
             : " No tiene"}</p>
       </header>
 
-      <div className="chat__messages" ref={listRef}>
+      <div className="chat-messages" ref={listRef}>
         {messages.map((m, idx) => (
-          <MessageBubble key={m.id ?? `msg-${idx}`} role={m.role} text={m.text} sentAt={m.sent_at} />
+          <MessageBubble key={m.id ?? `msg-${idx}`} role={m.role} text={m.text} />
         ))}
       </div>
 
       {atBottom && (
-        <div className="chat__footer">
+        <div className="chat-footer">
           <button
-            className="chat__generate-btn"
+            className="chat-generate-btn"
             onClick={onGenerate}
             disabled={generating}
             aria-busy={generating ? "true" : "false"}
