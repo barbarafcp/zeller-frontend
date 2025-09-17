@@ -28,5 +28,7 @@ Cargar nuevos mensajes automáticamente a las vistas para no tener que recargar 
 
 ## Mejoras o extensiones
 Login / Sign up con auth0 para más seguridad
+Agregar buscador de chats para cuando los clientes sean muchos
+Agregar endpoints para eliminar y actualizar clientes, mensajes o deudas
 Que los mensajes soporte images y audio para la IA
 Expandir modelos, marcas y sucursales de los autos
