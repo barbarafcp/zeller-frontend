@@ -2,6 +2,10 @@
 
 El frontend de producción lo puedes encontrar en: [https://my-zeller.netlify.app](https://my-zeller.netlify.app)
 
+Consideraciones que debes tener:
+Al hacer un post mediante curl, postman u otro, se debe recargar la página para que aparezca.
+Puedes hacer un POST /clients/:id/message sin el atributo sentAt, se hará automáticamente.
+
 ---
 
 ## Ejecución local
@@ -25,7 +29,7 @@ En cuanto a los colores, opté por el morado como color principal. El cual es t�
 ### 2. Mejoras
 Agregar fecha y hora de los mensajes para más claridad
 Comenzar vista con el primer chat abierto para más eficiencia
-Cargar nuevos mensajes automáticamente a las vistas para no tener que recargar todo
+Cargar nuevos mensajes automáticamente a las vistas para no tener que recargar todo, aunque principalmente no hice esto para evitar tantos requests al back y que se pueda sobrecargar
 
 ## Mejoras o extensiones
 Login / Sign up con auth0 para más seguridad

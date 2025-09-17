@@ -7,19 +7,19 @@
   gap: 12px;
 }
 
-.sidebar__title {
+.sidebar-title {
   font-weight: 700;
   letter-spacing: .3px;
   font-size: 1.05rem;
   margin-bottom: 4px;
 }
 
-.sidebar__nav {
+.sidebar-nav {
   display: grid;
   gap: 8px;
 }
 
-.sidebar__btn {
+.sidebar-btn {
   appearance: none;
   border: none;
   border-radius: 10px;
@@ -30,10 +30,10 @@
   cursor: pointer;
   transition: background .2s ease, transform .03s ease;
 }
-.sidebar__btn:hover { background: rgba(255,255,255,.18); }
-.sidebar__btn:active { transform: translateY(1px); }
+.sidebar-btn:hover { background: rgba(255,255,255,.18); }
+.sidebar-btn:active { transform: translateY(1px); }
 
-.sidebar__btn.is-active {
+.sidebar-btn.is-active {
   background: #fff;
   color: var(--purple-dark);
   font-weight: 600;

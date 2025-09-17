@@ -6,6 +6,7 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
   const listRef = useRef(null);
   const [atBottom, setAtBottom] = useState(true);
 
+  // Mantener scroll al final cuando llegan nuevos mensajes
   useEffect(() => {
     const el = listRef.current;
     if (el && atBottom) {
@@ -13,6 +14,7 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
     }
   }, [messages, atBottom]);
 
+  // Detectar si el usuario está al final del scroll
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
@@ -28,13 +30,16 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
     return () => el.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Calcular total de deudas del cliente
+  const totalDebts = client.Debts?.length > 0
+    ? client.Debts.reduce((sum, d) => sum + (d.amount ?? 0), 0)
+    : "No tiene";
+
   return (
     <div className="chat">
       <header className="chat-header">
         <h2 className="chat-title">{client.name}</h2>
-        <p className="client-info">RUT: {client.rut} - Deudas: { }
-            {client.Debts && client.Debts.length > 0 ? client.Debts.reduce((total, d) => total + (d.amount ?? 0), 0) 
-            : " No tiene"}</p>
+         <p className="client-info">RUT: {client.rut} - Deudas: {totalDebts}</p>
       </header>
 
       <div className="chat-messages" ref={listRef}>

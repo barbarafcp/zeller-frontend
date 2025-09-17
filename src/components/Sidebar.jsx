@@ -3,25 +3,25 @@ import "../styles/sidebar.css";
 export default function Sidebar({ title, mode, onModeChange }) {
   return (
     <aside className="sidebar">
-      <div className="sidebar__title">{title}</div>
+      <div className="sidebar-title">{title}</div>
 
-      <nav className="sidebar__nav">
+      <nav className="sidebar-nav">
         <button
-          className={`sidebar__btn ${mode === "all" ? "is-active" : ""}`}
+          className={`sidebar-btn ${mode === "all" ? "is-active" : ""}`}
           onClick={() => onModeChange("all")}
         >
           All Clients
         </button>
 
          <button
-          className={`sidebar__btn ${mode === "followup" ? "is-active" : ""}`}
+          className={`sidebar-btn ${mode === "followup" ? "is-active" : ""}`}
           onClick={() => onModeChange("followup")}
         >
           Clients to Follow Up
         </button>
 
         <button
-          className={`sidebar__btn ${mode === "noFollowup" ? "is-active" : ""}`}
+          className={`sidebar-btn ${mode === "noFollowup" ? "is-active" : ""}`}
           onClick={() => onModeChange("noFollowup")}
         >
           Clients that don't need follow up
