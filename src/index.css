@@ -1,8 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600&display=swap');
 
+:root{
+  --bg: #E6DBFF;
+  --primary: #3F20C6;
+  --accent: #9A6AFF; 
+  --text-on: #EDEDED;
+  --card: #F7F2FF;
+  --shadow: 0 20px 60px rgba(63,32,198,.15);
+}
+
 html, body, #root {
-  background-color: #D7CEFF;
+  background: radial-gradient(40rem 40rem at 50% 30%, rgba(63,32,198,.08), transparent),
+              var(--bg);
   height: 100%;
   width: 100%;
   margin: 0;

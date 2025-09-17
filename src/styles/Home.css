@@ -1,4 +1,6 @@
 .home {
+  background: radial-gradient(40rem 40rem at 50% 30%, rgba(63,32,198,.08), transparent),
+              var(--bg);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -38,21 +40,15 @@
   box-shadow: 0 0 24px rgba(154,106,255,0.7);
 }
 
-.car-img {
-  width: 150px;
-  height: auto;
-  margin: 1rem 0;
-
-  animation: car-spin infinite 5s linear;
-
-  filter: drop-shadow(0 0 24px rgba(63,32,198,0.8));
+.car-img{
+  width:160px;
+  height:auto;
+  margin:0 auto 12px;
+  animation: float 3.6s ease-in-out infinite;
+  filter: drop-shadow(0 12px 28px rgba(63,32,198,.35));
 }
 
-@keyframes car-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes float{
+  0%,100%{ transform:translateY(0) }
+  50%{ transform:translateY(-8px) }
 }
