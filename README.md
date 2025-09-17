@@ -18,6 +18,7 @@ yarn dev
 
 ## Explicación del diseño
 ### 1. Vistas
+![View](assets/view.png)
 Diseñé el frontend queriendo que toda la información estuviera a disposición, por lo que la dividí en 3 partes: el sidebar con los diferentes segmentos de clientes, el centro con la lista seleccionable de cada uno y a la derecha la conversación e información del cliente. Así se mantiene el contexto siempre visible y se optimiza el flujo de trabajo al tener datos clave y acciones (como generar mensajes) en una sola vista.
 En cuanto a los colores, opté por el morado como color principal. El cual es típico en el mundo de la tecnología, y aporta sensación de innovación y modernidad.
 

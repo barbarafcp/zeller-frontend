@@ -23,7 +23,7 @@ export default function ChatView({ client, messages, onGenerate, generating }) {
       setAtBottom(isBottom);
     };
 
-    el.addEventListener("scroll", handleScroll);
+    el.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); 
     return () => el.removeEventListener("scroll", handleScroll);
   }, []);
